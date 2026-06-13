@@ -1,73 +1,164 @@
-# React + TypeScript + Vite
+# NYT Clone — Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A functional clone of the New York Times homepage built with React, TypeScript, and Tailwind CSS. Fetches real-time news from the NYT API via a dedicated Express proxy server, and includes Google authentication and a personal bookmarks system.
 
-Currently, two official plugins are available:
+**Live site:** https://gleaming-banoffee-3e9705.netlify.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Real-time news** — Fetches top stories from 8 sections (U.S., World, Business, Arts, Lifestyle, Opinion, Science, Technology, Travel) via the NYT Top Stories API
+- **Market data widget** — Live stock prices for AAPL and TSLA via Finnhub API
+- **Google authentication** — Sign in with Google via Firebase Authentication
+- **Bookmarks** — Save and remove articles, stored per user in Firebase Firestore
+- **Personal dashboard** — View and manage saved articles
+- **Responsive design** — Mobile-first layout with hamburger menu and slide-out drawer
+- **Category navigation** — Desktop navbar with subsection dropdowns
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| Technology | Version | Purpose |
+|---|---|---|
+| React | 19 | UI library |
+| TypeScript | 6 | Type safety |
+| Vite | 8 | Build tool and dev server |
+| Tailwind CSS | v4 | Styling (utility-first) |
+| Redux Toolkit | 2 | Global state management |
+| React Router DOM | 7 | Client-side routing |
+| Axios | 1 | HTTP requests |
+| Firebase | 12 | Authentication + Firestore |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── ArticleCard.tsx      # Article card with bookmark button
+│   ├── Categories.tsx       # Desktop navbar with dropdowns
+│   ├── Dashboard.tsx        # User dashboard with saved articles
+│   ├── Footer.tsx           # Responsive footer (accordion on mobile)
+│   ├── MarketData.tsx       # Live stock price widget
+│   ├── MobileMenu.tsx       # Hamburger menu with drawer
+│   ├── Navbar.tsx           # Top navigation bar
+│   └── NewsArea.tsx         # Main news grid layout
+├── data/
+│   └── categories.ts        # Navigation categories and subsections
+├── services/
+│   ├── authService.ts       # Firebase Auth helpers
+│   ├── bookmarkService.ts   # Firestore bookmark CRUD
+│   ├── firebase.ts          # Firebase app initialization
+│   ├── finnhubApi.ts        # Finnhub API calls (via proxy)
+│   └── nytApi.ts            # NYT API calls (via proxy)
+├── store/
+│   ├── sliceNews.ts         # Redux slice for news state
+│   └── store.ts             # Redux store configuration
+├── App.tsx
+└── main.tsx
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Getting Started
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Prerequisites
+
+- Node.js 18+
+- A running instance of [nyt-clone-server](https://github.com/FranCodesc/nyt-clone-server)
+- A Firebase project with Authentication and Firestore enabled
+
+### Installation
+
+```bash
+git clone https://github.com/FranCodesc/nyt-clone-client.git
+cd nyt-clone-client
+npm install
 ```
+
+### Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+VITE_API_URL=http://localhost:3000
+
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+All `VITE_` prefixed variables are exposed to the client bundle by Vite. Firebase variables are safe to expose; API keys for NYT and Finnhub are kept server-side only.
+
+### Run in Development
+
+Start the proxy server first, then:
+
+```bash
+npm run dev
+```
+
+The app runs at `http://localhost:5173`.
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+---
+
+## Deployment (Netlify)
+
+The client is deployed on Netlify via the GitHub repository. On each push to `main`, Netlify automatically rebuilds and deploys.
+
+**Build settings:**
+- Build command: `npm run build`
+- Publish directory: `dist`
+
+**Environment variables** must be added in the Netlify dashboard under Site settings → Environment variables. Do not commit `.env` to the repository.
+
+---
+
+## Architecture
+
+This client communicates exclusively with the proxy server — never directly with the NYT or Finnhub APIs. This keeps API keys out of the client bundle entirely.
+
+```
+Browser (React)
+    │
+    ├── /api/news/:section   ──►  Express Server  ──►  NYT API
+    ├── /api/market/:symbol  ──►  Express Server  ──►  Finnhub API
+    │
+    └── Firebase SDK  ──►  Firebase Auth + Firestore
+```
+
+---
+
+## Firebase Security Rules
+
+Firestore rules allow access only to authenticated users for their own data:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /bookmarks/{bookmarkId} {
+      allow read, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+    }
+  }
+}
+```
+
+---
+
+## Related Repository
+
+- **Server:** https://github.com/FranCodesc/nyt-clone-server
