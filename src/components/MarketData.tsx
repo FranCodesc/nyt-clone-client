@@ -14,7 +14,7 @@ export function MarketData() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % symbols.length);
-    }, 8000);
+    }, 5000);
     return () => clearInterval(interval);
   }, []);
 
