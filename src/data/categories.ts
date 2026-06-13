@@ -129,7 +129,7 @@ export const categories: Category[] = [
   },
   {
     label: "Lifestyle",
-    section: "lifestyle",
+    section: "fashion",
     subsections: [
       { label: "Health", url: "https://www.nytimes.com/section/health" },
       { label: "Food", url: "https://www.nytimes.com/section/food" },
