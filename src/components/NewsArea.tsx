@@ -1,10 +1,8 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { fetchNewsThunk } from "../store/sliceNews";
-import { type AppDispatch } from "../store/store";
+import { fetchNewsThunk, type Article  } from "../store/sliceNews";
+import { type AppDispatch, type RootState  } from "../store/store";
 import { ArticleCard } from "./ArticleCard";
-import { type Article } from "../store/sliceNews";
-import { type RootState } from "../store/store";
 import { useAuth } from "../hooks/useAuth";
 
 export function NewsArea() {
