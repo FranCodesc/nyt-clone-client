@@ -19,7 +19,7 @@ export function NewsArea() {
 
   useEffect(() => {
     dispatch(fetchNewsThunk(selectedSection));
-  }, [selectedSection]);
+  }, [selectedSection, dispatch]);
 
   const leftArticles = articles.slice(0, 15);
   const mainArticles = articles.slice(15, 22);
