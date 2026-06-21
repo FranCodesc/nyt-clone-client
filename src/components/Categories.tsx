@@ -8,6 +8,7 @@ export function Categories() {
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [dropdownTop, setDropdownTop] = useState(0);
+  const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -16,13 +17,36 @@ export function Categories() {
     }
   }, [hoveredSection]);
 
+  useEffect(() => {
+    return () => {
+      if (closeTimeout.current) clearTimeout(closeTimeout.current);
+    };
+  }, []);
+
+  function handleMouseEnter(section: string) {
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current);
+      closeTimeout.current = null;
+    }
+    setHoveredSection(section);
+  }
+
+  function handleMouseLeave() {
+    closeTimeout.current = setTimeout(() => {
+      setHoveredSection(null);
+    }, 150);
+  }
+
   return (
-    <div ref={containerRef} className="flex gap-6 lg:gap-10 text-sm w-full overflow-x-auto pb-2 lg:overflow-x-visible">
+    <div
+      ref={containerRef}
+      className="flex gap-6 lg:gap-10 text-sm w-full overflow-x-auto pb-2 lg:overflow-x-visible"
+    >
       {categories.map((cat) => (
         <div
           key={cat.section}
-          onMouseEnter={() => setHoveredSection(cat.section)}
-          onMouseLeave={() => setHoveredSection(null)}
+          onMouseEnter={() => handleMouseEnter(cat.section)}
+          onMouseLeave={handleMouseLeave}
         >
           <div className="flex gap-1">
             <span
