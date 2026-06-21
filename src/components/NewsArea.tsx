@@ -3,15 +3,13 @@ import { useEffect } from "react";
 import { fetchNewsThunk } from "../store/sliceNews";
 import { type AppDispatch } from "../store/store";
 import { ArticleCard } from "./ArticleCard";
-import { onAuthStateChanged } from "firebase/auth";
-import { useState } from "react";
-import { auth } from "../services/firebase";
 import { type Article } from "../store/sliceNews";
 import { type RootState } from "../store/store";
+import { useAuth } from "../hooks/useAuth";
 
 export function NewsArea() {
   const dispatch = useDispatch<AppDispatch>();
-  const [userId, setUserId] = useState<string | undefined>(undefined);
+  const user = useAuth();
 
   const articles = useSelector((state: RootState) => state.news.articles);
   const loading = useSelector((state: RootState) => state.news.loading);
@@ -22,13 +20,6 @@ export function NewsArea() {
   useEffect(() => {
     dispatch(fetchNewsThunk(selectedSection));
   }, [selectedSection]);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUserId(user?.uid);
-    });
-    return () => unsubscribe();
-  }, []);
 
   const leftArticles = articles.slice(0, 15);
   const mainArticles = articles.slice(15, 22);
@@ -82,7 +73,7 @@ export function NewsArea() {
             url={article.url}
             multimedia={article.multimedia}
             variant="text"
-            userId={userId}
+            userId={user?.uid}
           />
         ))}
       </div>
@@ -96,7 +87,7 @@ export function NewsArea() {
             url={article.url}
             multimedia={article.multimedia}
             variant="main"
-            userId={userId}
+            userId={user?.uid}
           />
         ))}
       </div>
@@ -110,7 +101,7 @@ export function NewsArea() {
             url={article.url}
             multimedia={article.multimedia}
             variant="small"
-            userId={userId}
+            userId={user?.uid}
           />
         ))}
       </div>
