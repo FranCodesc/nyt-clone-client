@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
 import { fetchMarket } from "../services/finnhubApi";
 
+interface MarketQuote {
+  c: number;
+  pc: number;
+}
+
 export function MarketData() {
   const symbols = ["AAPL", "MSFT", "GOOGL"];
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [market, setMarket] = useState<any>(null);
+  const [market, setMarket] = useState<MarketQuote | null>(null);
 
   useEffect(() => {
     setMarket(null);

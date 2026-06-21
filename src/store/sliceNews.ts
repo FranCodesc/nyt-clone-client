@@ -9,10 +9,20 @@ export const fetchNewsThunk = createAsyncThunk(
   },
 );
 
+export interface Multimedia {
+  url: string;
+}
+
+export interface Article {
+  title: string;
+  abstract: string;
+  url: string;
+  multimedia: Multimedia[] | null;
+}
 
 //type
 interface NewsState {
-  articles: any[];
+  articles: Article[];
   selectedSection: string;
   loading: boolean;
   error: string | null;
