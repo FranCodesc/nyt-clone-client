@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { onAuthStateChanged, type User } from "firebase/auth";
-import { auth } from "../services/firebase";
+import { useAuth } from "../hooks/useAuth";
 import { loginWithGoogle, logout } from "../services/authService";
 import {
   getUserBookmarks,
@@ -11,29 +10,20 @@ import { Link } from "react-router-dom";
 import NytLogo from "./NytLogo";
 
 export function Dashboard() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const user = useAuth();
   const [bookmarks, setBookmarks] = useState<BookmarkedArticle[]>([]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-      if (currentUser) {
-        const saved = await getUserBookmarks(currentUser.uid);
-        setBookmarks(saved);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+    if (user) {
+      getUserBookmarks(user.uid).then(setBookmarks);
+    }
+  }, [user]);
 
   async function handleRemove(url: string) {
     if (!user) return;
     await removeBookmark(user.uid, url);
     setBookmarks((prev) => prev.filter((b) => b.url !== url));
   }
-
-  if (loading) return <div>Loading...</div>;
 
   if (!user) {
     return (
