@@ -9,7 +9,7 @@ A functional clone of the New York Times homepage built with React, TypeScript, 
 ## Features
 
 - **Real-time news** — Fetches top stories from 8 sections (U.S., World, Business, Arts, Lifestyle, Opinion, Science, Technology, Travel) via the NYT Top Stories API
-- **Market data widget** — Live stock prices for AAPL and TSLA via Finnhub API
+- **Market data widget** — Live stock prices for AAPL, MSFT and GOOGL via Finnhub API
 - **Google authentication** — Sign in with Google via Firebase Authentication
 - **Bookmarks** — Save and remove articles, stored per user in Firebase Firestore
 - **Personal dashboard** — View and manage saved articles
